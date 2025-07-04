@@ -1,6 +1,9 @@
 import products from '../data/products';
+import { useCart } from '../context/cart/useCart';
 
 export default function Products() {
+  const { addToCart } = useCart();
+  
   return (
     <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-4">
       {products.map((product) => (
@@ -15,7 +18,10 @@ export default function Products() {
           />
           <h2 className="mt-4 text-lg font-semibold text-center">{product.name}</h2>
           <p className="text-gray-600 text-center text-2xl pb-3">${product.price.toLocaleString()}</p>
-          <button className="mt-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+          <button
+            onClick={() => addToCart(product)}
+            className="mt-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+          >
             Add to Cart
           </button>
         </div>
