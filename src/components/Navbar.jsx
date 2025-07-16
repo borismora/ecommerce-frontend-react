@@ -48,14 +48,6 @@ export default function Navbar() {
             )}
           </div>
         </NavLink>
-        <NavLink
-          to="/checkout"
-          className={({ isActive }) =>
-            isActive ? 'text-blue-600 font-semibold' : 'text-gray-700'
-          }
-        >
-          Checkout
-        </NavLink>
       </div>
     </nav>
   );
