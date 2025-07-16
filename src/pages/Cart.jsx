@@ -58,13 +58,25 @@ export default function Cart() {
         Total: ${total.toLocaleString()}
       </div>
 
-      <div className="text-right">
-        <button
-          onClick={clearCart}
-          className="mt-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-        >
-          Clear Cart
-        </button>
+      <div className='flex items-center mt-4 justify-end gap-4'>
+        <div className="text-right mt-4">
+          <button
+            onClick={clearCart}
+            className="inline-block bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded cursor-pointer"
+          >
+            Clear Cart
+          </button>
+        </div>
+        {cart.length > 0 && (
+          <div className='text-right mt-4'>
+            <Link
+              to='/checkout'
+              className='inline-block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded'
+            >
+              Go to Checkout
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
