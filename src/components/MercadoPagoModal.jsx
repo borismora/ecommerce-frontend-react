@@ -10,9 +10,10 @@ export default function MercadoPagoModal({ preferenceId, user, amount, onClose, 
     const initBrick = async () => {
       try {
         const MercadoPago = await loadMercadoPagoSDK();
-        const mp = new MercadoPago('TEST-3b957cf9-8bcb-496f-a6c5-21468b00eae7', {
+        const mp = new MercadoPago(import.meta.env.VITE_MP_PUBLIC_KEY, {
           locale: 'es',
         });
+        const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
         bricksBuilder = mp.bricks();
 
@@ -45,7 +46,7 @@ export default function MercadoPagoModal({ preferenceId, user, amount, onClose, 
             onReady: () => { },
             onSubmit: ({ formData }) =>
               new Promise((resolve, reject) => {
-                fetch('http://localhost:4000/process_payment', {
+                fetch(`${apiUrl}/process_payment`, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify(formData),
