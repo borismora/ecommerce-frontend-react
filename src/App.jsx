@@ -5,6 +5,9 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Navbar from './components/Navbar';
 import OrderSummary from './pages/OrderSummary';
+import { initMercadoPago } from '@mercadopago/sdk-react';
+
+initMercadoPago('TEST-3b957cf9-8bcb-496f-a6c5-21468b00eae7');
 
 function App() {
   return (

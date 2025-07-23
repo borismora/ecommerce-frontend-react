@@ -1,40 +1,70 @@
+import { useState, useEffect } from 'react';
 import { useCart } from '../context/cart/useCart';
 import { useCheckoutForm } from '../hooks/useCheckoutForm';
 import { submitOrder } from '../services/orders';
+import { createPreference } from '../services/payments/mercadoPago';
 import { useNavigate } from 'react-router-dom';
+import MercadoPagoModal from '../components/MercadoPagoModal';
 
 export default function Checkout() {
   const { cart, clearCart } = useCart();
   const { form, error, validate, handleChange } = useCheckoutForm();
+  const [method, setMethod] = useState('cash');
+  const [preferenceId, setPreferenceId] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+  useEffect(() => {
+    setPreferenceId(null);
+  }, [method])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
+    const order = {
+      user: form,
+      items: cart.map(({ id, name, price, quantity }) => ({ id, name, price, quantity })),
+      total,
+    };
+
     try {
-      await submitOrder({
-        user: form,
-        items: cart.map(({ id, name, price, quantity }) => ({ id, name, price, quantity })),
-        total,
-      });
+      await submitOrder(order);
+      localStorage.setItem('lastOrder', JSON.stringify(order));
 
-      localStorage.setItem('lastOrder', JSON.stringify({
-        user: form,
-        items: cart,
-        total,
-      }));
-
-      clearCart();
-      navigate('/order-summary', {
-        state: { order: { user: form, items: cart, total } },
-      });
+      if (method === 'cash') {
+        clearCart();
+        navigate('/order-summary', {
+          state: { order: { ...order, method: 'Cash' } },
+        });
+      } else if (method === 'mp') {
+        const prefId = await createPreference(cart);
+        setPreferenceId(prefId);
+        setShowModal(true);
+      }
     } catch (error) {
       console.log('Order failed:', error);
     }
   };
+
+  if (showModal && method === 'mp' && preferenceId) {
+    return (
+      <MercadoPagoModal
+        preferenceId={preferenceId}
+        user={form}
+        amount={total}
+        onClose={() => setShowModal(false)}
+        onSuccess={() => {
+          clearCart();
+          navigate('/order-summary', {
+            state: { order: { user: form, items: cart, total, method: 'MercadoPago' } },
+          });
+        }}
+      />
+    );
+  }
 
   return (
     <div className="max-w-xl mx-auto p-6">
@@ -60,6 +90,11 @@ export default function Checkout() {
 
           <div className="text-right font-semibold">
             Total: ${total.toLocaleString()}
+          </div>
+
+          <div>
+            <label><input type="radio" name="method" value="cash" checked={method === 'cash'} onChange={() => setMethod('cash')} /> Cash</label>
+            <label className="ml-4"><input type="radio" name="method" value="mp" checked={method === 'mp'} onChange={() => setMethod('mp')} /> MercadoPago</label>
           </div>
 
           <button
