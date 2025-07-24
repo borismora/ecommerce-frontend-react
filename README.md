@@ -1,12 +1,100 @@
-# React + Vite
+# E-commerce Frontend with React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the React frontend of the e-commerce project integrated with **MercadoPago Brick SDK**. It provides a simple shopping experience and enables users to make secure payments using MercadoPago.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React app built with functional components and hooks
+- Payment method selection (cash or MercadoPago)
+- MercadoPago Brick integration via modal
+- Dynamic payment preference creation
+- User-friendly UI and responsive design
 
-## Expanding the ESLint configuration
+## 🛠️ Technologies
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- React
+- Vite
+- JavaScript (ES6+)
+- Tailwind CSS (if used)
+- MercadoPago Brick SDK
+
+## 📁 Project Structure
+
+```
+ecommerce-frontend-react/
+├── public/
+├── src/
+│   ├── components/
+│   │   ├── Checkout.jsx
+│   │   ├── PaymentSelector.jsx
+│   │   ├── MercadoPagoModal.jsx
+│   │   └── ...
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── ...
+├── .env
+├── .gitignore
+├── index.html
+├── package.json
+└── README.md
+```
+
+## 🔐 Environment Variables
+
+Create a `.env` file in the root directory:
+
+```bash
+VITE_PUBLIC_KEY=your_mercadopago_public_key
+VITE_API_URL=http://localhost:4000
+```
+
+> Replace `your_mercadopago_public_key` with your MercadoPago public key. `VITE_API_URL` should point to your backend service.
+
+## 📦 Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/borismora/ecommerce-frontend-react.git
+cd ecommerce-frontend-react
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Start the development server:
+
+```bash
+npm run dev
+```
+
+The app will be available at `http://localhost:5173` by default.
+
+## 💳 Usage
+
+1. Select a product and choose a payment method.
+2. On selecting "MercadoPago", the app will call the backend to create a payment preference.
+3. A modal will open with the MercadoPago payment interface (Brick).
+4. Complete the payment using one of the available methods.
+
+## 🔧 Customization
+
+- You can modify the product data, payment logic, and modal appearance in the components under `src/components/`.
+- The integration with the backend is done via `fetch` to `/create_preference`.
+
+## ⚠️ Troubleshooting
+
+- If the modal renders twice, ensure **React.StrictMode** is not causing double execution.
+- Make sure your `.env` variables start with `VITE_` and that you restart the dev server after changes.
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+Built with 🛒 by [borismora](https://github.com/borismora)
+
