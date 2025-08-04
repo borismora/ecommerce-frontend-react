@@ -3,9 +3,11 @@ import { useCart } from '../context/cart/useCart';
 import { ShoppingCart } from 'lucide-react';
 import MiniCart from './MiniCart';
 import { useState } from 'react';
+import { useAuth } from '../context/auth/useAuth';
 
 export default function Navbar() {
   const { cart } = useCart();
+  const { user, performLogout } = useAuth();
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
   const [showMiniCart, setShowMiniCart] = useState(false);
 
@@ -31,6 +33,45 @@ export default function Navbar() {
         >
           Products
         </NavLink>
+
+        {user ? (
+          <>
+            <NavLink
+              to="/profile"
+              className={({ isActive }) =>
+                isActive ? 'text-blue-600 font-semibold' : 'text-gray-700'
+              }
+            >
+              👋 {user.name}
+            </NavLink>
+            <button
+              className="text-gray-700 underline hover:text-red-600 transition-colors cursor-pointer"
+              onClick={performLogout}
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                isActive ? 'text-blue-600 font-semibold' : 'text-gray-700'
+              }
+            >
+              Login
+            </NavLink>
+            <NavLink
+              to="/register"
+              className={({ isActive }) =>
+                isActive ? 'text-blue-600 font-semibold' : 'text-gray-700'
+              }
+            >
+              Register
+            </NavLink>
+          </>
+        )}
+
         <div
           className="relative inline-block"
           onMouseEnter={() => setShowMiniCart(true)}
