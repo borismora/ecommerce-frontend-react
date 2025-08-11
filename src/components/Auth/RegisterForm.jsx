@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import { register } from '../../services/authService';
+import { useAuth } from '../../context/auth/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 export default function RegisterForm() {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
+  const { performLogin } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,10 +19,17 @@ export default function RegisterForm() {
     }
 
     try {
-      await register(form);
-      setMessage('✅ Registration successful, please login.');
+      const response = await register(form);
+      localStorage.setItem('token', response.token);
+      performLogin(response.user);
+
       setSuccess(true);
+      setMessage('✅ Registration successful! Redirecting...');
       setForm({ name: '', email: '', password: '' });
+
+      setTimeout(() => {
+        navigate('/');
+      }, 500);
     } catch {
       setMessage('❌ Registration failed. Please try again.');
       setSuccess(false);

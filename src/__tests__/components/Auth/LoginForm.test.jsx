@@ -1,0 +1,72 @@
+/**
+ * @jest-environment jsdom
+ */
+
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { expect, it, jest, describe, beforeEach } from '@jest/globals';
+import LoginForm from '../../../components/Auth/LoginForm';
+import { useAuth } from '../../../context/auth/useAuth';
+import { login } from '../../../services/authService';
+import { useNavigate } from 'react-router-dom';
+import { faker } from '@faker-js/faker';
+
+jest.mock('../../../context/auth/useAuth');
+jest.mock('../../../services/authService', () => ({
+  login: jest.fn(),
+}));
+jest.mock('react-router-dom', () => ({
+  useNavigate: jest.fn(),
+}));
+
+describe('LoginForm', () => {
+  const mockPerformLogin = jest.fn();
+  const mockNavigate = jest.fn();
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    localStorage.clear();
+    useAuth.mockReturnValue({ performLogin: mockPerformLogin });
+    useNavigate.mockReturnValue(mockNavigate);
+  });
+
+  it('renders the login form', () => {
+    render(<LoginForm />);
+    expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
+  });
+
+  it('shows error message when email or password is empty', () => {
+    render(<LoginForm />);
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+    expect(
+      screen.getByText('Email and password are required.')
+    ).toBeInTheDocument();
+  });
+
+  it('calls performLogin and navigates on successful login', async () => {
+    const userCredentials = { email: faker.internet.email(), password: faker.internet.password() };
+    const mockUser = { id: 1, name: 'Test User' };
+    const mockToken = 'mockToken';
+    login.mockResolvedValue({ user: mockUser, token: mockToken });
+
+    render(<LoginForm />);
+    fireEvent.change(screen.getByPlaceholderText('Email'), {
+      target: { value: userCredentials.email },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Password'), {
+      target: { value: userCredentials.password },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+
+    await waitFor(() => {
+      expect(login).toHaveBeenCalledWith({
+        email: userCredentials.email,
+        password: userCredentials.password,
+      });
+      expect(mockPerformLogin).toHaveBeenCalledWith(mockUser);
+      expect(localStorage.getItem('token')).toBe(mockToken);
+      expect(mockNavigate).toHaveBeenCalledWith('/');
+    });
+  });
+});
