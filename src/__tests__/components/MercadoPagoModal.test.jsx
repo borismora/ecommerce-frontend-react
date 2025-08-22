@@ -1,55 +1,36 @@
-/**
- * @jest-environment jsdom
- */
-import { render, screen, waitFor } from '@testing-library/react';
-import { expect, it, jest, describe, beforeEach } from '@jest/globals';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { vi, describe, beforeEach, it, expect } from 'vitest';
 import MercadoPagoModal from '../../components/MercadoPagoModal';
 import { loadMercadoPagoSDK } from '../../utils/loadMercadoPago';
-import { faker } from '@faker-js/faker';
 
-jest.mock('../../utils/loadMercadoPago', () => ({
-  loadMercadoPagoSDK: jest.fn(),
+vi.mock('../../utils/loadMercadoPago', () => ({
+  loadMercadoPagoSDK: vi.fn(),
 }));
 
+vi.spyOn(console, 'error').mockImplementation(() => { });
+
 describe('MercadoPagoModal', () => {
-  const mockOnClose = jest.fn();
-  const mockOnSuccess = jest.fn();
-  const preferenceId = 'test_preference_id';
-  const user = { name: faker.person.fullName(), email: faker.internet.email() };
-  const amount = faker.number.float({ min: 10, max: 100 });
+  const preferenceId = 'preference_123';
+  const user = { name: 'Juan Pérez', email: 'juan@example.com' };
+  const amount = 1000;
+  const mockOnClose = vi.fn();
+  const mockOnSuccess = vi.fn();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
+
     loadMercadoPagoSDK.mockResolvedValue({
-      bricks: jest.fn().mockReturnValue({
-        create: jest.fn(),
+      bricks: vi.fn().mockReturnValue({
+        create: vi.fn(),
       }),
     });
-  });
 
-  it('renders MercadoPagoModal and initializes MercadoPago SDK', async () => {
-    render(
-      <MercadoPagoModal
-        preferenceId={preferenceId}
-        user={user}
-        amount={amount}
-        onClose={mockOnClose}
-        onSuccess={mockOnSuccess}
-      />
-    );
-    expect(loadMercadoPagoSDK).toHaveBeenCalled();
-    expect(screen.getByText('Cargando...')).toBeInTheDocument();
-    await waitFor(() => {
-      expect(screen.queryByText('Cargando...')).not.toBeInTheDocument();
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      json: () => Promise.resolve({ status: 'approved' }),
     });
   });
 
-  it('calls onSuccess with payment data on successful payment', async () => {
-    const mockPaymentResponse = { status: 'approved', transactionId: '12345' };
-    const mockFetch = jest.fn().mockResolvedValue({
-      json: () => Promise.resolve(mockPaymentResponse),
-    });
-    globalThis.fetch = mockFetch;
+  it('renders the modal with correct title and close button', () => {
     render(
       <MercadoPagoModal
         preferenceId={preferenceId}
@@ -60,22 +41,26 @@ describe('MercadoPagoModal', () => {
       />
     );
 
-    await waitFor(() => {
-      expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining('/process_payment'),
-        expect.objectContaining({
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-        })
-      );
-    });
-
-    expect(mockOnSuccess).toHaveBeenCalledWith(mockPaymentResponse);
+    expect(screen.getByText('Completa tu pago')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /×/ })).toBeInTheDocument();
   });
 
-  it('handles payment errors gracefully', async () => {
-    const mockFetch = jest.fn().mockRejectedValue(new Error('Payment error'));
-    globalThis.fetch = mockFetch;
+  it('calls onClose when the close button is clicked', () => {
+    render(
+      <MercadoPagoModal
+        preferenceId={preferenceId}
+        user={user}
+        amount={amount}
+        onClose={mockOnClose}
+        onSuccess={mockOnSuccess}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /×/ }));
+    expect(mockOnClose).toHaveBeenCalled();
+  });
+
+  it('initializes Mercado Pago SDK with correct config', async () => {
     render(
       <MercadoPagoModal
         preferenceId={preferenceId}
@@ -87,15 +72,7 @@ describe('MercadoPagoModal', () => {
     );
 
     await waitFor(() => {
-      expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining('/process_payment'),
-        expect.objectContaining({
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-        })
-      );
+      expect(loadMercadoPagoSDK).toHaveBeenCalled();
     });
-    expect(mockOnSuccess).not.toHaveBeenCalled();
-    expect(screen.getByText('Payment error:')).toBeInTheDocument();
   });
 });

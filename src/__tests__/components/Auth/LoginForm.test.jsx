@@ -1,29 +1,26 @@
-/**
- * @jest-environment jsdom
- */
-
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { expect, it, jest, describe, beforeEach } from '@jest/globals';
+import { expect, it, describe, beforeEach } from 'vitest';
+import { vi } from 'vitest';
 import LoginForm from '../../../components/Auth/LoginForm';
 import { useAuth } from '../../../context/auth/useAuth';
 import { login } from '../../../services/authService';
 import { useNavigate } from 'react-router-dom';
 import { faker } from '@faker-js/faker';
 
-jest.mock('../../../context/auth/useAuth');
-jest.mock('../../../services/authService', () => ({
-  login: jest.fn(),
+vi.mock('../../../context/auth/useAuth');
+vi.mock('../../../services/authService', () => ({
+  login: vi.fn(),
 }));
-jest.mock('react-router-dom', () => ({
-  useNavigate: jest.fn(),
+vi.mock('react-router-dom', () => ({
+  useNavigate: vi.fn(),
 }));
 
 describe('LoginForm', () => {
-  const mockPerformLogin = jest.fn();
-  const mockNavigate = jest.fn();
+  const mockPerformLogin = vi.fn();
+  const mockNavigate = vi.fn();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     localStorage.clear();
     useAuth.mockReturnValue({ performLogin: mockPerformLogin });
     useNavigate.mockReturnValue(mockNavigate);

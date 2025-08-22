@@ -1,17 +1,14 @@
-/**
- * @jest-environment jsdom
- */
-import { expect, it, describe, jest, beforeEach } from '@jest/globals';
+import { expect, it, describe, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { faker } from '@faker-js/faker';
 
-jest.mock('../../context/cart/useCart', () => ({
-  useCart: jest.fn()
+vi.mock('../../context/cart/useCart', () => ({
+  useCart: vi.fn()
 }));
-jest.mock('../../context/auth/useAuth', () => ({
-  useAuth: jest.fn()
+vi.mock('../../context/auth/useAuth', () => ({
+  useAuth: vi.fn()
 }));
 
 import { useCart } from '../../context/cart/useCart';
@@ -21,7 +18,7 @@ describe('Navbar', () => {
   let mockCartData;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     mockCartData = [
       {
@@ -38,7 +35,7 @@ describe('Navbar', () => {
 
     useAuth.mockReturnValue({
       user: null,
-      performLogout: jest.fn()
+      performLogout: vi.fn()
     });
 
     useCart.mockReturnValue({
@@ -73,7 +70,7 @@ describe('Navbar', () => {
 
   it('shows user name and logout when logged in', () => {
     const mockUser = { id: 1, name: 'Test User' };
-    const mockLogout = jest.fn();
+    const mockLogout = vi.fn();
 
     useAuth.mockReturnValue({
       user: mockUser,
