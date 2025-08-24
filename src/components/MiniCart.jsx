@@ -17,13 +17,13 @@ export default function MiniCart() {
             {cart.map((item) => (
               <li key={item.id} className='py-1 flex justify-between'>
                 <span>{item.name} x {item.quantity}</span>
-                <span>${(item.price * item.quantity).toLocaleString()}</span>
+                <span>${(item.price * item.quantity).toLocaleString('es-CL')}</span>
               </li>
             ))}
           </ul>
 
           <div className="mt-2 font-semibold text-right">
-            Total: ${total.toLocaleString()}
+            Total: ${total.toLocaleString('es-CL')}
           </div>
 
           <Link
