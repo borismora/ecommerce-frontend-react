@@ -1,6 +1,6 @@
 export async function createPreference(items) {
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
-  const response = await fetch(`${apiUrl}/create-preference`, {
+  const response = await fetch(`${apiUrl}/mercado-pago/create-preference`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
