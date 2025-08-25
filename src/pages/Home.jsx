@@ -17,7 +17,7 @@ export default function Home() {
         </NavLink>
       </section>
 
-      {/* Categorías */}
+      {/* Categories */}
       <section className="px-6">
         <h2 className="text-2xl font-semibold mb-4 text-center">Explore by category</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -39,7 +39,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Confianza */}
+      {/* Trusted */}
       <section className="bg-gray-100 py-10">
         <div className="max-w-4xl mx-auto grid sm:grid-cols-3 gap-6 text-center">
           {[
