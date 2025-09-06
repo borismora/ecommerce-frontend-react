@@ -1,16 +1,18 @@
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/cart/useCart';
+import { useTranslation } from 'react-i18next';
 
 export default function MiniCart() {
+  const { t } = useTranslation();
   const { cart } = useCart();
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   return (
     <div className="absolute right-0 top-10 w-72 bg-white shadow-lg border rounded p-4 z-50">
-      <h3 className='font-semibold mb-2'>Cart Preview</h3>
+      <h3 className='font-semibold mb-2'>{t('miniCart.title')}</h3>
 
       {cart.length === 0 ? (
-        <p className="text-sm text-gray-500">Your cart is empty.</p>
+        <p className="text-sm text-gray-500">{t('miniCart.emptyCart')}</p>
       ) : (
         <>
           <ul className="divide-y text-sm max-h-40 overflow-y-auto">
@@ -30,7 +32,7 @@ export default function MiniCart() {
             to='/cart'
             className='mt-3 inline-block text-center w-full bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition'
           >
-            Go to Cart
+            {t('miniCart.buttonToCart')}
           </Link>
         </>
       )}

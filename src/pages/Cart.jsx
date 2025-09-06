@@ -1,7 +1,9 @@
 import { useCart } from '../context/cart/useCart';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function Cart() {
+  const { t } = useTranslation();
   const { cart, removeFromCart, clearCart } = useCart();
 
   const total = cart.reduce(
@@ -12,17 +14,17 @@ export default function Cart() {
   if (cart.length === 0) {
     return (
       <div className="p-6 text-center">
-        <h2 className="text-xl font-semibold mb-4">Your cart is empty 🛒</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('cart.empty')}</h2>
         <Link to="/products" className="text-blue-600 hover:underline">
-          Go back to products
+          {t('cart.goToProducts')}
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="p-6 space-y-4">
-      <h2 className="text-2xl font-bold">Your Cart</h2>
+    <div className="p-6 space-y-4 max-w-6xl mx-auto">
+      <h2 className="text-2xl font-bold">{t('cart.title')}</h2>
 
       {cart.map((item) => (
         <div
@@ -49,7 +51,7 @@ export default function Cart() {
             onClick={() => removeFromCart(item.id)}
             className="text-red-600 hover:underline"
           >
-            Remove
+            {t('cart.remove')}
           </button>
         </div>
       ))}
@@ -64,7 +66,7 @@ export default function Cart() {
             onClick={clearCart}
             className="inline-block bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded cursor-pointer"
           >
-            Clear Cart
+            {t('cart.clear')}
           </button>
         </div>
         {cart.length > 0 && (
@@ -73,7 +75,7 @@ export default function Cart() {
               to='/checkout'
               className='inline-block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded'
             >
-              Go to Checkout
+              {t('cart.checkout')}
             </Link>
           </div>
         )}

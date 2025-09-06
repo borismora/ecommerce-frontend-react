@@ -4,12 +4,16 @@ import { ShoppingCart } from 'lucide-react';
 import MiniCart from './MiniCart';
 import { useState } from 'react';
 import { useAuth } from '../context/auth/useAuth';
+import { useLanguage } from '../context/language/useLanguage';
+import { useTranslation } from 'react-i18next';
 
 export default function Navbar() {
   const { cart } = useCart();
   const { user, performLogout } = useAuth();
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
   const [showMiniCart, setShowMiniCart] = useState(false);
+  const { language, changeLanguage } = useLanguage();
+  const { t } = useTranslation();
 
   return (
     <nav className="bg-white shadow-md px-6 py-4 flex justify-between items-center sticky top-0 z-10">
@@ -17,13 +21,23 @@ export default function Navbar() {
         MyStore
       </div>
       <div className="space-x-4">
+        <div className="inline-block mr-4">
+          <select
+            value={language}
+            onChange={(e) => changeLanguage(e.target.value)}
+            className="border border-gray-300 rounded-md p-1"
+          >
+            <option value="es">ES</option>
+            <option value="en">EN</option>
+          </select>
+        </div>
         <NavLink
           to="/"
           className={({ isActive }) =>
             isActive ? 'text-blue-600 font-semibold' : 'text-gray-700'
           }
         >
-          Home
+          {t('navbar.home')}
         </NavLink>
         <NavLink
           to="/products"
@@ -31,7 +45,7 @@ export default function Navbar() {
             isActive ? 'text-blue-600 font-semibold' : 'text-gray-700'
           }
         >
-          Products
+          {t('navbar.products')}
         </NavLink>
 
         {user ? (
@@ -59,7 +73,7 @@ export default function Navbar() {
                 isActive ? 'text-blue-600 font-semibold' : 'text-gray-700'
               }
             >
-              Login
+              {t('navbar.login')}
             </NavLink>
             <NavLink
               to="/register"
@@ -67,7 +81,7 @@ export default function Navbar() {
                 isActive ? 'text-blue-600 font-semibold' : 'text-gray-700'
               }
             >
-              Register
+              {t('navbar.register')}
             </NavLink>
           </>
         )}

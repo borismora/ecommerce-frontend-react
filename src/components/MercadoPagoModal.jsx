@@ -46,7 +46,7 @@ export default function MercadoPagoModal({ preferenceId, user, amount, onClose, 
             onReady: () => { },
             onSubmit: ({ formData }) =>
               new Promise((resolve, reject) => {
-                fetch(`${apiUrl}/process_payment`, {
+                fetch(`${apiUrl}/mercado-pago/process-payment`, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify(formData),

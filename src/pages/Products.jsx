@@ -1,9 +1,11 @@
 import products from '../data/products';
 import { useCart } from '../context/cart/useCart';
+import { useTranslation } from 'react-i18next';
 
 export default function Products() {
   const { addToCart } = useCart();
-  
+  const { t } = useTranslation();
+
   return (
     <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-4">
       {products.map((product) => (
@@ -22,7 +24,7 @@ export default function Products() {
             onClick={() => addToCart(product)}
             className="mt-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
           >
-            Add to Cart
+            {t('products.addToCart')}
           </button>
         </div>
       ))}

@@ -1,0 +1,73 @@
+{
+  "navbar": {
+    "home": "Home",
+    "products": "Products",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout"
+  },
+  "home": {
+    "welcome": "Welcome to my site",
+    "description": "This is a sample e-commerce application.",
+    "productsButton": "See Products",
+    "categories": {
+      "title": "Explore by category",
+      "clothes": "Clothes",
+      "electronics": "Electronics",
+      "games": "Games",
+      "offers": "Offers"
+    },
+    "footer": {
+      "secure": "Secure Payment",
+      "shipping": "Fast Shipping",
+      "returns": "Easy Returns"
+    }
+  },
+  "products": {
+    "addToCart": "Add to Cart"
+  },
+  "miniCart": {
+    "title": "Cart Preview",
+    "emptyCart": "Your cart is empty",
+    "buttonToCart": "Go to Cart"
+  },
+  "cart": {
+    "title": "Your Shopping Cart",
+    "empty": "Your cart is empty 🛒",
+    "total": "Total",
+    "checkout": "Go to Checkout",
+    "clear": "Clear Cart",
+    "goToProducts": "Go back to products",
+    "remove": "Remove"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "name": "Name",
+    "email": "Email",
+    "address": "Address",
+    "cash": "Cash",
+    "submit": "Submit Order",
+    "empty": "Your cart is empty, add some products before checking out."
+  },
+  "register": {
+    "title": "Create an Account",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "submit": "Register",
+    "haveAccount": "Already have an account? Login",
+    "emptyFields": "All fields are required",
+    "success": "✅ Registration successful! Redirecting...",
+    "error": "❌ Registration failed. Please try again."
+  },
+  "login": {
+    "title": "Welcome Back",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Login",
+    "noAccount": "Don't have an account? Register",
+    "error": "❌ Login failed. Please check your credentials.",
+    "emptyFields": "All fields are required"
+  }
+}
