@@ -1,0 +1,73 @@
+{
+  "navbar": {
+    "home": "Home",
+    "products": "Productos",
+    "login": "Login",
+    "register": "Registro",
+    "logout": "Cerrar sesión"
+  },
+  "home": {
+    "welcome": "Bienvenido a mi sitio",
+    "description": "Este es un ejemplo de una aplicación de comercio electrónico.",
+    "productsButton": "Ver Productos",
+    "categories": {
+      "title": "Explorar por categoría",
+      "clothes": "Ropa",
+      "electronics": "Electrónica",
+      "games": "Juegos",
+      "offers": "Ofertas"
+    },
+    "footer": {
+      "secure": "Pago Seguro",
+      "shipping": "Envío Rápido",
+      "returns": "Devoluciones Fáciles"
+    }
+  },
+  "products": {
+    "addToCart": "Agregar al carrito"
+  },
+  "miniCart": {
+    "title": "Vista previa del carrito",
+    "emptyCart": "Tu carrito está vacío",
+    "buttonToCart": "Ir al carrito"
+  },
+  "cart": {
+    "title": "Tu carrito de compras",
+    "empty": "Tu carrito está vacío 🛒",
+    "total": "Total",
+    "checkout": "Ir a pagar",
+    "clear": "Vaciar carrito",
+    "goToProducts": "Volver a productos",
+    "remove": "Eliminar"
+  },
+  "checkout": {
+    "title": "Pagar Pedido",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "address": "Dirección",
+    "cash": "Efectivo",
+    "submit": "Enviar pedido",
+    "empty": "Tu carrito está vacío, agrega algunos productos antes de pagar."
+  },
+  "register": {
+    "title": "Crear una cuenta",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "submit": "Registrarse",
+    "haveAccount": "¿Ya tienes una cuenta? Iniciar sesión",
+    "emptyFields": "Todos los campos son obligatorios",
+    "success": "✅ ¡Registro exitoso! Redirigiendo...",
+    "error": "❌ Error en el registro. Inténtalo de nuevo."
+  },
+  "login": {
+    "title": "Iniciar sesión en tu cuenta",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "submit": "Iniciar sesión",
+    "noAccount": "¿No tienes una cuenta? Regístrate",
+    "error": "❌ Error al iniciar sesión. Verifica tus credenciales.",
+    "emptyFields": "Todos los campos son obligatorios"
+  }
+}

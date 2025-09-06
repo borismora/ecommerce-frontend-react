@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { register } from '../../services/authService';
 import { useAuth } from '../../context/auth/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function RegisterForm() {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
@@ -9,11 +10,12 @@ export default function RegisterForm() {
   const [success, setSuccess] = useState(false);
   const { performLogin } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.password) {
-      setMessage('All fields are required.');
+      setMessage(t('register.emptyFields'));
       setSuccess(false);
       return;
     }
@@ -24,14 +26,14 @@ export default function RegisterForm() {
       performLogin(response.user);
 
       setSuccess(true);
-      setMessage('✅ Registration successful! Redirecting...');
+      setMessage(t('register.success'));
       setForm({ name: '', email: '', password: '' });
 
       setTimeout(() => {
         navigate('/');
       }, 500);
     } catch {
-      setMessage('❌ Registration failed. Please try again.');
+      setMessage(t('register.error'));
       setSuccess(false);
     }
   };
@@ -42,12 +44,12 @@ export default function RegisterForm() {
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 w-full max-w-md"
       >
-        <h2 className="text-2xl font-semibold text-center mb-6 text-blue-600">Create Account</h2>
+        <h2 className="text-2xl font-semibold text-center mb-6 text-blue-600">{t('register.title')}</h2>
 
         <div className="mb-4">
           <input
             type="text"
-            placeholder="Name"
+            placeholder={t('register.name')}
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -57,7 +59,7 @@ export default function RegisterForm() {
         <div className="mb-4">
           <input
             type="email"
-            placeholder="Email"
+            placeholder={t('register.email')}
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -67,7 +69,7 @@ export default function RegisterForm() {
         <div className="mb-6">
           <input
             type="password"
-            placeholder="Password"
+            placeholder={t('register.password')}
             value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -78,7 +80,7 @@ export default function RegisterForm() {
           type="submit"
           className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200 cursor-pointer"
         >
-          Register
+          {t('register.submit')}
         </button>
 
         {message && (

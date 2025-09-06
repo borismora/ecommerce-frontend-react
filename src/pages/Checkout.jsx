@@ -5,6 +5,7 @@ import { submitOrder } from '../services/orders';
 import { createPreference } from '../services/payments/mercadoPago';
 import { useNavigate } from 'react-router-dom';
 import MercadoPagoModal from '../components/MercadoPagoModal';
+import { useTranslation } from 'react-i18next';
 
 export default function Checkout() {
   const { cart, clearCart } = useCart();
@@ -13,6 +14,7 @@ export default function Checkout() {
   const [preferenceId, setPreferenceId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
@@ -68,10 +70,10 @@ export default function Checkout() {
 
   return (
     <div className="max-w-xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Checkout</h1>
+      <h1 className="text-2xl font-bold mb-4">{t('checkout.title')}</h1>
 
       {cart.length === 0 ? (
-        <p>Your cart is empty.</p>
+        <p>{t('checkout.empty')}</p>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           {['name', 'email', 'address'].map((field) => (
@@ -79,7 +81,7 @@ export default function Checkout() {
               key={field}
               type={field === 'email' ? 'email' : 'text'}
               name={field}
-              placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+              placeholder={t(`checkout.${field}`)}
               value={form[field]}
               onChange={handleChange}
               className="w-full p-2 border rounded"
@@ -93,7 +95,7 @@ export default function Checkout() {
           </div>
 
           <div>
-            <label><input type="radio" name="method" value="cash" checked={method === 'cash'} onChange={() => setMethod('cash')} /> Cash</label>
+            <label><input type="radio" name="method" value="cash" checked={method === 'cash'} onChange={() => setMethod('cash')} /> {t('checkout.cash')}</label>
             <label className="ml-4"><input type="radio" name="method" value="mp" checked={method === 'mp'} onChange={() => setMethod('mp')} /> MercadoPago</label>
           </div>
 
@@ -101,7 +103,7 @@ export default function Checkout() {
             type="submit"
             className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
           >
-            Place Order
+            {t('checkout.submit')}
           </button>
         </form>
       )}
