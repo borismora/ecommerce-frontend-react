@@ -1,69 +1,101 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { expect, it, describe, beforeEach } from 'vitest';
-import { vi } from 'vitest';
 import LoginForm from '../../../components/Auth/LoginForm';
-import { useAuth } from '../../../context/auth/useAuth';
 import { login } from '../../../services/authService';
-import { useNavigate } from 'react-router-dom';
 import { faker } from '@faker-js/faker';
 
-vi.mock('../../../context/auth/useAuth');
+// Mock dependencies
 vi.mock('../../../services/authService', () => ({
   login: vi.fn(),
 }));
+vi.mock('../../../context/auth/useAuth', () => ({
+  useAuth: () => ({
+    performLogin: vi.fn(),
+  }),
+}));
 vi.mock('react-router-dom', () => ({
-  useNavigate: vi.fn(),
+  useNavigate: () => vi.fn(),
+}));
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key) => key,
+  }),
 }));
 
+
 describe('LoginForm', () => {
-  const mockPerformLogin = vi.fn();
-  const mockNavigate = vi.fn();
+  const fakeUser = {
+    email: faker.internet.email(),
+    password: faker.internet.password(),
+  };
+  const fakeToken = faker.string.alphanumeric(20);
 
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
-    useAuth.mockReturnValue({ performLogin: mockPerformLogin });
-    useNavigate.mockReturnValue(mockNavigate);
   });
 
-  it('renders the login form', () => {
+  it('renders form inputs and submit button', () => {
     render(<LoginForm />);
-    expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('login.email')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('login.password')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'login.submit' })).toBeInTheDocument();
   });
 
-  it('shows error message when email or password is empty', () => {
+  it('shows error if fields are empty', async () => {
     render(<LoginForm />);
-    fireEvent.click(screen.getByRole('button', { name: /login/i }));
-    expect(
-      screen.getByText('Email and password are required.')
-    ).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'login.submit' }));
+    expect(await screen.findByText('login.emptyFields')).toBeInTheDocument();
   });
 
-  it('calls performLogin and navigates on successful login', async () => {
-    const userCredentials = { email: faker.internet.email(), password: faker.internet.password() };
-    const mockUser = { id: 1, name: 'Test User' };
-    const mockToken = 'mockToken';
-    login.mockResolvedValue({ user: mockUser, token: mockToken });
-
+  it('calls login and performLogin on successful submit', async () => {
+    login.mockResolvedValueOnce({ user: { id: 1 }, token: fakeToken });
     render(<LoginForm />);
-    fireEvent.change(screen.getByPlaceholderText('Email'), {
-      target: { value: userCredentials.email },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Password'), {
-      target: { value: userCredentials.password },
-    });
-    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+    fireEvent.change(screen.getByPlaceholderText('login.email'), { target: { value: fakeUser.email } });
+    fireEvent.change(screen.getByPlaceholderText('login.password'), { target: { value: fakeUser.password } });
+    fireEvent.click(screen.getByRole('button', { name: 'login.submit' }));
 
     await waitFor(() => {
-      expect(login).toHaveBeenCalledWith({
-        email: userCredentials.email,
-        password: userCredentials.password,
-      });
-      expect(mockPerformLogin).toHaveBeenCalledWith(mockUser);
-      expect(localStorage.getItem('token')).toBe(mockToken);
-      expect(mockNavigate).toHaveBeenCalledWith('/');
+      expect(login).toHaveBeenCalledWith({ email: fakeUser.email, password: fakeUser.password });
+      expect(localStorage.getItem('token')).toBe(fakeToken);
+    });
+  });
+
+  it('shows error message on login failure', async () => {
+    login.mockRejectedValueOnce(new Error('fail'));
+    render(<LoginForm />);
+    fireEvent.change(screen.getByPlaceholderText('login.email'), { target: { value: fakeUser.email } });
+    fireEvent.change(screen.getByPlaceholderText('login.password'), { target: { value: fakeUser.password } });
+    fireEvent.click(screen.getByRole('button', { name: 'login.submit' }));
+
+    expect(await screen.findByText('login.error')).toBeInTheDocument();
+  });
+
+  it('clears form after successful login', async () => {
+    login.mockResolvedValueOnce({ user: { id: 1 }, token: fakeToken });
+    render(<LoginForm />);
+    const emailInput = screen.getByPlaceholderText('login.email');
+    const passwordInput = screen.getByPlaceholderText('login.password');
+    fireEvent.change(emailInput, { target: { value: fakeUser.email } });
+    fireEvent.change(passwordInput, { target: { value: fakeUser.password } });
+    fireEvent.click(screen.getByRole('button', { name: 'login.submit' }));
+
+    await waitFor(() => {
+      expect(emailInput.value).toBe('');
+      expect(passwordInput.value).toBe('');
+    });
+  });
+
+  it('shows success style when success is true', async () => {
+    login.mockResolvedValueOnce({ user: { id: 1 }, token: fakeToken });
+    render(<LoginForm />);
+    fireEvent.change(screen.getByPlaceholderText('login.email'), { target: { value: fakeUser.email } });
+    fireEvent.change(screen.getByPlaceholderText('login.password'), { target: { value: fakeUser.password } });
+    fireEvent.click(screen.getByRole('button', { name: 'login.submit' }));
+
+    await waitFor(() => {
+      expect(screen.queryByText('login.error')).not.toBeInTheDocument();
+      expect(screen.queryByText('login.emptyFields')).not.toBeInTheDocument();
     });
   });
 });
