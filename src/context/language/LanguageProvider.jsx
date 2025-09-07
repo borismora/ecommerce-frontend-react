@@ -6,7 +6,7 @@ export function LanguageProvider({ children }) {
   const { i18n } = useTranslation();
   const [language, setLanguage] = useState(() => {
     const storedLanguage = localStorage.getItem("language");
-    return storedLanguage ? storedLanguage : "es";
+    return storedLanguage ? storedLanguage : "en";
   });
 
   const changeLanguage = (lang) => {

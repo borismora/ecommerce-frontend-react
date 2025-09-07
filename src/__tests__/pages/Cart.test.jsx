@@ -1,152 +1,115 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Cart from '../../pages/Cart';
+import { useCart } from '../../context/cart/useCart';
 import { BrowserRouter } from 'react-router-dom';
-import { useCart as mockUseCart } from '../../context/cart/useCart';
+import { vi, afterEach, describe, it, expect } from 'vitest';
 import { faker } from '@faker-js/faker';
 
-// Mock useCart hook
-vi.mock('../../context/cart/useCart', () => ({
-  useCart: vi.fn(),
+// Mock useCart and useTranslation
+vi.mock('../../context/cart/useCart');
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key) => key,
+  }),
 }));
 
 function renderWithRouter(ui) {
   return render(<BrowserRouter>{ui}</BrowserRouter>);
 }
 
+const createFakeCartItem = () => ({
+  id: faker.string.uuid(),
+  name: faker.commerce.productName(),
+  price: Number(faker.commerce.price({ min: 10, max: 1000 })),
+  quantity: faker.number.int({ min: 1, max: 5 }),
+  image: faker.image.url(),
+});
+
 describe('Cart page', () => {
-  beforeEach(() => {
+  afterEach(() => {
     vi.clearAllMocks();
   });
 
   it('renders empty cart message and link', () => {
-    mockUseCart.mockReturnValue({
+    useCart.mockReturnValue({
       cart: [],
       removeFromCart: vi.fn(),
       clearCart: vi.fn(),
     });
 
     renderWithRouter(<Cart />);
-    expect(screen.getByText(/your cart is empty/i)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /go back to products/i })).toBeInTheDocument();
+    expect(screen.getByText('cart.empty')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'cart.goToProducts' })).toHaveAttribute('href', '/products');
   });
 
   it('renders cart items and total', () => {
-    const cartItems = [
-      {
-        id: 1,
-        name: faker.commerce.productName(),
-        price: faker.commerce.price({ dec: 0 }),
-        quantity: faker.number.int({ min: 1, max: 5 }),
-        image: faker.image.url()
-      },
-      {
-        id: 2,
-        name: faker.commerce.productName(),
-        price: faker.commerce.price({ dec: 0 }),
-        quantity: faker.number.int({ min: 1, max: 5 }),
-        image: faker.image.url()
-      },
-    ];
-    const subTotals = cartItems.map(item => (item.price * item.quantity).toLocaleString());
-    const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toLocaleString();
-    mockUseCart.mockReturnValue({
-      cart: cartItems,
+    const fakeItems = Array.from({ length: 2 }, createFakeCartItem);
+    useCart.mockReturnValue({
+      cart: fakeItems,
       removeFromCart: vi.fn(),
       clearCart: vi.fn(),
     });
 
     renderWithRouter(<Cart />);
+    fakeItems.forEach(item => {
+      expect(screen.getByText(item.name)).toBeInTheDocument();
+      expect(screen.getByAltText(item.name)).toHaveAttribute('src', item.image);
+      expect(screen.getByText(`$${item.price.toLocaleString()} x ${item.quantity}`)).toBeInTheDocument();
+      expect(screen.getByText(`Subtotal: $${(item.price * item.quantity).toLocaleString()}`)).toBeInTheDocument();
+    });
 
-    // Headers and items
-    expect(screen.getByText(/your cart/i)).toBeInTheDocument();
-    expect(screen.getByText(cartItems[0].name)).toBeInTheDocument();
-    expect(screen.getByText(cartItems[1].name)).toBeInTheDocument();
-
-    // Item prices
-    expect(screen.getByText(`$${cartItems[0].price} x ${cartItems[0].quantity}`)).toBeInTheDocument();
-    expect(screen.getByText(`$${cartItems[1].price} x ${cartItems[1].quantity}`)).toBeInTheDocument();
-
-    // Subtotals - corrected matchers
-    expect(screen.getByText((_, el) => el.textContent === `Subtotal: $${subTotals[0]}`)).toBeInTheDocument();
-    expect(screen.getByText((_, el) => el.textContent === `Subtotal: $${subTotals[1]}`)).toBeInTheDocument();
-
-    // Total
-    expect(screen.getByText((_, el) => el.textContent === `Total: $${total}`)).toBeInTheDocument();
+    const total = fakeItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    expect(screen.getByText(`Total: $${total.toLocaleString()}`)).toBeInTheDocument();
   });
 
-  it('calls removeFromCart when Remove button is clicked', () => {
+  it('calls removeFromCart when remove button is clicked', () => {
+    const fakeItem = createFakeCartItem();
     const removeFromCart = vi.fn();
-    const mockCart = [
-      {
-        id: 1,
-        name: faker.commerce.productName(),
-        price: faker.commerce.price({ dec: 0 }),
-        quantity: faker.number.int({ min: 1, max: 5 }),
-        image: faker.image.url()
-      },
-    ]
-    mockUseCart.mockReturnValue({
-      cart: mockCart,
+    useCart.mockReturnValue({
+      cart: [fakeItem],
       removeFromCart,
       clearCart: vi.fn(),
     });
 
     renderWithRouter(<Cart />);
-    fireEvent.click(screen.getByText(/remove/i));
-    expect(removeFromCart).toHaveBeenCalledWith(1);
+    fireEvent.click(screen.getByRole('button', { name: 'cart.remove' }));
+    expect(removeFromCart).toHaveBeenCalledWith(fakeItem.id);
   });
 
-  it('calls clearCart when Clear Cart button is clicked', () => {
+  it('calls clearCart when clear button is clicked', () => {
+    const fakeItem = createFakeCartItem();
     const clearCart = vi.fn();
-    const mockCart = [
-      {
-        id: 1,
-        name: faker.commerce.productName(),
-        price: faker.commerce.price({ dec: 0 }),
-        quantity: faker.number.int({ min: 1, max: 5 }),
-        image: faker.image.url()
-      },
-    ]
-    mockUseCart.mockReturnValue({
-      cart: mockCart,
+    useCart.mockReturnValue({
+      cart: [fakeItem],
       removeFromCart: vi.fn(),
       clearCart,
     });
 
     renderWithRouter(<Cart />);
-    fireEvent.click(screen.getByText(/clear cart/i));
+    fireEvent.click(screen.getByRole('button', { name: 'cart.clear' }));
     expect(clearCart).toHaveBeenCalled();
   });
 
-  it('shows Go to Checkout link when cart is not empty', () => {
-    const mockCart = [
-      {
-        id: 1,
-        name: faker.commerce.productName(),
-        price: faker.commerce.price({ dec: 0 }),
-        quantity: faker.number.int({ min: 1, max: 5 }),
-        image: faker.image.url()
-      },
-    ]
-    mockUseCart.mockReturnValue({
-      cart: mockCart,
+  it('shows checkout link when cart is not empty', () => {
+    const fakeItem = createFakeCartItem();
+    useCart.mockReturnValue({
+      cart: [fakeItem],
       removeFromCart: vi.fn(),
       clearCart: vi.fn(),
     });
 
     renderWithRouter(<Cart />);
-    expect(screen.getByRole('link', { name: /go to checkout/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'cart.checkout' })).toHaveAttribute('href', '/checkout');
   });
 
-  it('does not show Go to Checkout link when cart is empty', () => {
-    mockUseCart.mockReturnValue({
+  it('does not show checkout link when cart is empty', () => {
+    useCart.mockReturnValue({
       cart: [],
       removeFromCart: vi.fn(),
       clearCart: vi.fn(),
     });
 
     renderWithRouter(<Cart />);
-    expect(screen.queryByRole('link', { name: /go to checkout/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'cart.checkout' })).not.toBeInTheDocument();
   });
 });

@@ -1,19 +1,23 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import MiniCart from '../../components/MiniCart';
-import { BrowserRouter } from 'react-router-dom';
 import { useCart } from '../../context/cart/useCart';
+import { MemoryRouter } from 'react-router-dom';
 
-// Mock useCart hook
-vi.mock('../../context/cart/useCart', () => ({
-  useCart: vi.fn(),
+// Mock useCart and useTranslation
+vi.mock('../../context/cart/useCart');
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key) => {
+      const translations = {
+        'miniCart.title': 'Mini Cart',
+        'miniCart.emptyCart': 'Your cart is empty',
+        'miniCart.buttonToCart': 'Go to Cart',
+      };
+      return translations[key] || key;
+    },
+  }),
 }));
-const mockUseCart = vi.mocked(useCart);
-
-
-function renderWithRouter(ui) {
-  return render(<BrowserRouter>{ui}</BrowserRouter>);
-}
 
 describe('MiniCart', () => {
   beforeEach(() => {
@@ -21,60 +25,74 @@ describe('MiniCart', () => {
   });
 
   it('renders empty cart message when cart is empty', () => {
-    mockUseCart.mockReturnValue({ cart: [] });
-    renderWithRouter(<MiniCart />);
-    expect(screen.getByText(/your cart is empty/i)).toBeInTheDocument();
-    expect(screen.queryByText(/total:/i)).not.toBeInTheDocument();
-    expect(screen.queryByRole('link', { name: /go to cart/i })).not.toBeInTheDocument();
+    useCart.mockReturnValue({ cart: [] });
+
+    render(
+      <MemoryRouter>
+        <MiniCart />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText('Mini Cart')).toBeInTheDocument();
+    expect(screen.getByText('Your cart is empty')).toBeInTheDocument();
+    expect(screen.queryByText('Go to Cart')).not.toBeInTheDocument();
   });
 
   it('renders cart items and total when cart has items', () => {
-    mockUseCart.mockReturnValue({
+    useCart.mockReturnValue({
       cart: [
-        { id: 1, name: 'Product A', price: 100, quantity: 2 },
-        { id: 2, name: 'Product B', price: 50, quantity: 1 },
+        { id: 1, name: 'Product A', price: 1000, quantity: 2 },
+        { id: 2, name: 'Product B', price: 500, quantity: 1 },
       ],
     });
-    renderWithRouter(<MiniCart />);
-    expect(screen.getByText(/product a x 2/i)).toBeInTheDocument();
-    expect(screen.getByText(/product b x 1/i)).toBeInTheDocument();
-    expect(screen.getByText('$200')).toBeInTheDocument();
-    expect(screen.getByText('$50')).toBeInTheDocument();
-    expect(screen.getByText(/total: \$250/i)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /go to cart/i })).toHaveAttribute('href', '/cart');
+
+    render(
+      <MemoryRouter>
+        <MiniCart />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText('Mini Cart')).toBeInTheDocument();
+    expect(screen.getByText('Product A x 2')).toBeInTheDocument();
+    expect(screen.getByText('Product B x 1')).toBeInTheDocument();
+    expect(screen.getByText('$2.000')).toBeInTheDocument(); // 1000*2
+    expect(screen.getByText('$500')).toBeInTheDocument();   // 500*1
+    expect(screen.getByText('Total: $2.500')).toBeInTheDocument();
+    expect(screen.getByText('Go to Cart')).toBeInTheDocument();
   });
 
   it('renders correct total for multiple items', () => {
-    mockUseCart.mockReturnValue({
+    useCart.mockReturnValue({
       cart: [
-        { id: 1, name: 'Item 1', price: 10, quantity: 3 },
-        { id: 2, name: 'Item 2', price: 20, quantity: 2 },
+        { id: 1, name: 'Item 1', price: 200, quantity: 3 }, // 600
+        { id: 2, name: 'Item 2', price: 150, quantity: 2 }, // 300
       ],
     });
-    renderWithRouter(<MiniCart />);
-    expect(screen.getByText(/total: \$70/i)).toBeInTheDocument();
+
+    render(
+      <MemoryRouter>
+        <MiniCart />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText('Total: $900')).toBeInTheDocument();
   });
 
-  it('renders formatted prices with thousands separator', () => {
-    mockUseCart.mockReturnValue({
+  it('renders the link to /cart', () => {
+    useCart.mockReturnValue({
       cart: [
-        { id: 1, name: 'Expensive', price: 1000, quantity: 2 },
+        { id: 1, name: 'Item', price: 100, quantity: 1 },
       ],
     });
-    renderWithRouter(<MiniCart />);
-    expect(screen.getByText('$2.000')).toBeInTheDocument();
-    expect(screen.getByText(/total: \$2.000/i)).toBeInTheDocument();
-  });
 
-  it('renders correct number of cart items', () => {
-    mockUseCart.mockReturnValue({
-      cart: [
-        { id: 1, name: 'A', price: 1, quantity: 1 },
-        { id: 2, name: 'B', price: 2, quantity: 2 },
-        { id: 3, name: 'C', price: 3, quantity: 3 },
-      ],
-    });
-    renderWithRouter(<MiniCart />);
-    expect(screen.getAllByRole('listitem')).toHaveLength(3);
+    render(
+      <MemoryRouter>
+        <MiniCart />
+      </MemoryRouter>
+    );
+
+    const link = screen.getByRole('link', { name: 'Go to Cart' });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('href', '/cart');
   });
 });
