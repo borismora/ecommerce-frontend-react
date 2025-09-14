@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import OrderSummary from './pages/OrderSummary';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/order-summary" element={<OrderSummary />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </div>
     </div>

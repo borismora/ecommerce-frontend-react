@@ -69,5 +69,11 @@
     "noAccount": "¿No tienes una cuenta? Regístrate",
     "error": "❌ Error al iniciar sesión. Verifica tus credenciales.",
     "emptyFields": "Todos los campos son obligatorios"
+  },
+  "profile": {
+    "title": "Perfil de usuario",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "user_not_logged_in": "Usuario no ha iniciado sesión."
   }
 }

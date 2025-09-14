@@ -69,5 +69,11 @@
     "noAccount": "Don't have an account? Register",
     "error": "❌ Login failed. Please check your credentials.",
     "emptyFields": "All fields are required"
+  },
+  "profile": {
+    "title": "User Profile",
+    "name": "Name",
+    "email": "Email",
+    "user_not_logged_in": "User not logged in."
   }
 }

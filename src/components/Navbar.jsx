@@ -21,16 +21,6 @@ export default function Navbar() {
         MyStore
       </div>
       <div className="space-x-4">
-        <div className="inline-block mr-4">
-          <select
-            value={language}
-            onChange={(e) => changeLanguage(e.target.value)}
-            className="border border-gray-300 rounded-md p-1"
-          >
-            <option value="es">ES</option>
-            <option value="en">EN</option>
-          </select>
-        </div>
         <NavLink
           to="/"
           className={({ isActive }) =>
@@ -86,8 +76,19 @@ export default function Navbar() {
           </>
         )}
 
+        <div className="inline-block mr-4">
+          <select
+            value={language}
+            onChange={(e) => changeLanguage(e.target.value)}
+            className="border border-gray-300 rounded-md p-1"
+          >
+            <option value="es">ES</option>
+            <option value="en">EN</option>
+          </select>
+        </div>
+
         <div
-          className="relative inline-block"
+          className="relative inline-block top-2"
           onMouseEnter={() => setShowMiniCart(true)}
           onMouseLeave={() => setShowMiniCart(false)}
         >
