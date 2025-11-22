@@ -25,14 +25,14 @@ export default function Home() {
         <h2 className="text-2xl font-semibold mb-4 text-center">{t('home.categories.title')}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { name: t('home.categories.clothes'), icon: '👕' },
-            { name: t('home.categories.electronics'), icon: '💻' },
-            { name: t('home.categories.games'), icon: '🎮' },
-            { name: t('home.categories.offers'), icon: '🔥' },
+            { name: t('home.categories.groceries'), icon: '🛒', value: 'groceries' },
+            { name: t('home.categories.laptops'), icon: '💻', value: 'laptops' },
+            { name: t('home.categories.smartphones'), icon: '📱', value: 'smartphones' },
+            { name: t('home.categories.vehicle'), icon: '🚗', value: 'vehicle' },
           ].map((cat) => (
             <NavLink
               key={cat.name}
-              to={`/products?category=${cat.name.toLowerCase()}`}
+              to={`/products?category=${cat.value}`}
               className="border p-6 rounded shadow hover:shadow-lg transition text-center bg-white"
             >
               <div className="text-4xl mb-2">{cat.icon}</div>

@@ -12,10 +12,10 @@
     "productsButton": "Ver Productos",
     "categories": {
       "title": "Explorar por categoría",
-      "clothes": "Ropa",
-      "electronics": "Electrónica",
-      "games": "Juegos",
-      "offers": "Ofertas"
+      "groceries": "Comestibles",
+      "laptops": "Laptops",
+      "smartphones": "Móviles",
+      "vehicle": "Vehículos"
     },
     "footer": {
       "secure": "Pago Seguro",
@@ -75,5 +75,17 @@
     "name": "Nombre",
     "email": "Correo electrónico",
     "user_not_logged_in": "Usuario no ha iniciado sesión."
+  },
+  "pagination": {
+    "previous": "← Anterior",
+    "next": "Siguiente →",
+    "page": "Página",
+    "of": "de"
+  },
+  "productFilters": {
+    "placeholder": "Buscar productos...",
+    "allCategories": "Todas las categorías",
+    "allBrands": "Todas las marcas",
+    "search": "Buscar"
   }
 }

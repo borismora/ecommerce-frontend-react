@@ -12,10 +12,10 @@
     "productsButton": "See Products",
     "categories": {
       "title": "Explore by category",
-      "clothes": "Clothes",
-      "electronics": "Electronics",
-      "games": "Games",
-      "offers": "Offers"
+      "groceries": "Groceries",
+      "laptops": "Laptops",
+      "smartphones": "Smartphones",
+      "vehicle": "Vehicles"
     },
     "footer": {
       "secure": "Secure Payment",
@@ -75,5 +75,17 @@
     "name": "Name",
     "email": "Email",
     "user_not_logged_in": "User not logged in."
+  },
+  "pagination": {
+    "previous": "← Previous",
+    "next": "Next →",
+    "page": "Page",
+    "of": "of"
+  },
+  "productFilters": {
+    "placeholder": "Search products...",
+    "allCategories": "All Categories",
+    "allBrands": "All Brands",
+    "search": "Search"
   }
 }
