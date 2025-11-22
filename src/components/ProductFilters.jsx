@@ -89,7 +89,7 @@ export default function ProductFilters({ onSearch, onFilter }) {
           <option value="">{t('productFilters.allCategories')}</option>
           {
             categories.map((cat) => (
-              <option key={cat.name} value={cat.name}>{cat.name}</option>
+              <option key={cat.name} value={cat.name}>{t(`productFilters.categories.${cat.name}`)}</option>
             ))
           }
         </select>

@@ -11,11 +11,11 @@ vi.mock('react-i18next', () => ({
         'home.welcome': 'Welcome!',
         'home.description': 'Best products for you.',
         'home.productsButton': 'See Products',
-        'home.categories.title': 'Categories',
-        'home.categories.clothes': 'Clothes',
-        'home.categories.electronics': 'Electronics',
-        'home.categories.games': 'Games',
-        'home.categories.offers': 'Offers',
+        'productFilters.categories.title': 'Categories',
+        'productFilters.categories.groceries': 'Groceries',
+        'productFilters.categories.laptops': 'Laptops',
+        'productFilters.categories.smartphones': 'Smartphones',
+        'productFilters.categories.vehicle': 'Vehicle',
         'home.footer.secure': 'Secure Payment',
         'home.footer.shipping': 'Fast Shipping',
         'home.footer.returns': 'Easy Returns',
@@ -42,17 +42,17 @@ describe('Home Page', () => {
 
   it('renders categories section with all categories', () => {
     expect(screen.getByText('Categories')).toBeInTheDocument();
-    expect(screen.getByText('Clothes')).toBeInTheDocument();
-    expect(screen.getByText('Electronics')).toBeInTheDocument();
-    expect(screen.getByText('Games')).toBeInTheDocument();
-    expect(screen.getByText('Offers')).toBeInTheDocument();
+    expect(screen.getByText('Groceries')).toBeInTheDocument();
+    expect(screen.getByText('Laptops')).toBeInTheDocument();
+    expect(screen.getByText('Smartphones')).toBeInTheDocument();
+    expect(screen.getByText('Vehicle')).toBeInTheDocument();
   });
 
   it('renders category links with correct hrefs', () => {
-    expect(screen.getByRole('link', { name: /Clothes/i })).toHaveAttribute('href', '/products?category=clothes');
-    expect(screen.getByRole('link', { name: /Electronics/i })).toHaveAttribute('href', '/products?category=electronics');
-    expect(screen.getByRole('link', { name: /Games/i })).toHaveAttribute('href', '/products?category=games');
-    expect(screen.getByRole('link', { name: /Offers/i })).toHaveAttribute('href', '/products?category=offers');
+    expect(screen.getByRole('link', { name: /Groceries/i })).toHaveAttribute('href', '/products?category=groceries');
+    expect(screen.getByRole('link', { name: /Laptops/i })).toHaveAttribute('href', '/products?category=laptops');
+    expect(screen.getByRole('link', { name: /Smartphones/i })).toHaveAttribute('href', '/products?category=smartphones');
+    expect(screen.getByRole('link', { name: /Vehicle/i })).toHaveAttribute('href', '/products?category=vehicle');
   });
 
   it('renders trusted section with all features', () => {
@@ -62,10 +62,10 @@ describe('Home Page', () => {
   });
 
   it('renders all emojis/icons', () => {
-    expect(screen.getByText('👕')).toBeInTheDocument();
+    expect(screen.getByText('🛒')).toBeInTheDocument();
     expect(screen.getByText('💻')).toBeInTheDocument();
-    expect(screen.getByText('🎮')).toBeInTheDocument();
-    expect(screen.getByText('🔥')).toBeInTheDocument();
+    expect(screen.getByText('📱')).toBeInTheDocument();
+    expect(screen.getByText('🚗')).toBeInTheDocument();
     expect(screen.getByText('🔒')).toBeInTheDocument();
     expect(screen.getByText('🚚')).toBeInTheDocument();
     expect(screen.getByText('↩️')).toBeInTheDocument();

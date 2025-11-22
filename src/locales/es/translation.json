@@ -10,13 +10,6 @@
     "welcome": "Bienvenido a mi sitio",
     "description": "Este es un ejemplo de una aplicación de comercio electrónico.",
     "productsButton": "Ver Productos",
-    "categories": {
-      "title": "Explorar por categoría",
-      "groceries": "Comestibles",
-      "laptops": "Laptops",
-      "smartphones": "Móviles",
-      "vehicle": "Vehículos"
-    },
     "footer": {
       "secure": "Pago Seguro",
       "shipping": "Envío Rápido",
@@ -86,6 +79,33 @@
     "placeholder": "Buscar productos...",
     "allCategories": "Todas las categorías",
     "allBrands": "Todas las marcas",
-    "search": "Buscar"
+    "search": "Buscar",
+    "categories": {
+      "title": "Explorar por categoría",
+      "beauty": "Belleza",
+      "fragrances": "Fragancias",
+      "furniture": "Muebles",
+      "groceries": "Comestibles",
+      "home-decoration": "Decoración del Hogar",
+      "kitchen-accessories": "Accesorios de Cocina",
+      "laptops": "Laptops",
+      "mens-shirts": "Camisas de Hombre",
+      "mens-shoes": "Zapatos de Hombre",
+      "mens-watches": "Relojes de Hombre",
+      "mobile-accessories": "Accesorios Móviles",
+      "motorcycle": "Motocicletas",
+      "skin-care": "Cuidado de la Piel",
+      "smartphones": "Móviles",
+      "sports-accessories": "Accesorios Deportivos",
+      "sunglasses": "Gafas de Sol",
+      "tablets": "Tabletas",
+      "tops": "Tops",
+      "vehicle": "Vehículos",
+      "womens-bags": "Bolsos de Mujer",
+      "womens-dresses": "Vestidos de Mujer",
+      "womens-jewellery": "Joyería de Mujer",
+      "womens-shoes": "Zapatos de Mujer",
+      "womens-watches": "Relojes de Mujer"
+    }
   }
 }

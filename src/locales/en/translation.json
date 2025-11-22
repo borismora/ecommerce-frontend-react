@@ -10,13 +10,6 @@
     "welcome": "Welcome to my site",
     "description": "This is a sample e-commerce application.",
     "productsButton": "See Products",
-    "categories": {
-      "title": "Explore by category",
-      "groceries": "Groceries",
-      "laptops": "Laptops",
-      "smartphones": "Smartphones",
-      "vehicle": "Vehicles"
-    },
     "footer": {
       "secure": "Secure Payment",
       "shipping": "Fast Shipping",
@@ -86,6 +79,33 @@
     "placeholder": "Search products...",
     "allCategories": "All Categories",
     "allBrands": "All Brands",
-    "search": "Search"
+    "search": "Search",
+    "categories": {
+      "title": "Explore by category",
+      "beauty": "Beauty",
+      "fragrances": "Fragrances",
+      "furniture": "Furniture",
+      "groceries": "Groceries",
+      "home-decoration": "Home Decoration",
+      "kitchen-accessories": "Kitchen Accessories",
+      "laptops": "Laptops",
+      "mens-shirts": "Men's Shirts",
+      "mens-shoes": "Men's Shoes",
+      "mens-watches": "Men's Watches",
+      "mobile-accessories": "Mobile Accessories",
+      "motorcycle": "Motorcycle",
+      "skin-care": "Skin Care",
+      "smartphones": "Smartphones",
+      "sports-accessories": "Sports Accessories",
+      "sunglasses": "Sunglasses",
+      "tablets": "Tablets",
+      "tops": "Tops",
+      "vehicle": "Vehicle",
+      "womens-bags": "Women's Bags",
+      "womens-dresses": "Women's Dresses",
+      "womens-jewellery": "Women's Jewellery",
+      "womens-shoes": "Women's Shoes",
+      "womens-watches": "Women's Watches"
+    }
   }
 }
