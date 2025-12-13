@@ -3,9 +3,9 @@
   publish = "dist"
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "22"
 
 [[redirects]]
   from = "/api/*"
-  to = "https://ecommerce-test-backend.netlify.app/:splat"
+  to = "/.netlify/functions/express/:splat"
   status = 200
