@@ -22,7 +22,7 @@ const createFakeCartItem = () => ({
   name: faker.commerce.productName(),
   price: Number(faker.commerce.price({ min: 10, max: 1000 })),
   quantity: faker.number.int({ min: 1, max: 5 }),
-  image: faker.image.url(),
+  photo: faker.image.url(),
 });
 
 describe('Cart page', () => {
@@ -53,7 +53,7 @@ describe('Cart page', () => {
     renderWithRouter(<Cart />);
     fakeItems.forEach(item => {
       expect(screen.getByText(item.name)).toBeInTheDocument();
-      expect(screen.getByAltText(item.name)).toHaveAttribute('src', item.image);
+      expect(screen.getByAltText(item.name)).toHaveAttribute('src', item.photo);
       expect(screen.getByText(`$${item.price.toLocaleString()} x ${item.quantity}`)).toBeInTheDocument();
       expect(screen.getByText(`Subtotal: $${(item.price * item.quantity).toLocaleString()}`)).toBeInTheDocument();
     });

@@ -10,13 +10,6 @@
     "welcome": "Welcome to my site",
     "description": "This is a sample e-commerce application.",
     "productsButton": "See Products",
-    "categories": {
-      "title": "Explore by category",
-      "clothes": "Clothes",
-      "electronics": "Electronics",
-      "games": "Games",
-      "offers": "Offers"
-    },
     "footer": {
       "secure": "Secure Payment",
       "shipping": "Fast Shipping",
@@ -75,5 +68,44 @@
     "name": "Name",
     "email": "Email",
     "user_not_logged_in": "User not logged in."
+  },
+  "pagination": {
+    "previous": "← Previous",
+    "next": "Next →",
+    "page": "Page",
+    "of": "of"
+  },
+  "productFilters": {
+    "placeholder": "Search products...",
+    "allCategories": "All Categories",
+    "allBrands": "All Brands",
+    "search": "Search",
+    "categories": {
+      "title": "Explore by category",
+      "beauty": "Beauty",
+      "fragrances": "Fragrances",
+      "furniture": "Furniture",
+      "groceries": "Groceries",
+      "home-decoration": "Home Decoration",
+      "kitchen-accessories": "Kitchen Accessories",
+      "laptops": "Laptops",
+      "mens-shirts": "Men's Shirts",
+      "mens-shoes": "Men's Shoes",
+      "mens-watches": "Men's Watches",
+      "mobile-accessories": "Mobile Accessories",
+      "motorcycle": "Motorcycle",
+      "skin-care": "Skin Care",
+      "smartphones": "Smartphones",
+      "sports-accessories": "Sports Accessories",
+      "sunglasses": "Sunglasses",
+      "tablets": "Tablets",
+      "tops": "Tops",
+      "vehicle": "Vehicle",
+      "womens-bags": "Women's Bags",
+      "womens-dresses": "Women's Dresses",
+      "womens-jewellery": "Women's Jewellery",
+      "womens-shoes": "Women's Shoes",
+      "womens-watches": "Women's Watches"
+    }
   }
 }
