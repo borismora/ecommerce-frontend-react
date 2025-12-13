@@ -6,6 +6,7 @@
   NODE_VERSION = "22"
 
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/express/:splat"
-  status = 200
+from = "/api/*"
+to = "/.netlify/functions/express/:splat"
+status = 200
+force = true
