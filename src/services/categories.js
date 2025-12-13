@@ -1,5 +1,5 @@
 export async function fetchCategories() {
-  const res = await fetch('/api/categories', {
+  const res = await fetch('/categories', {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' }
   });
