@@ -1,5 +1,7 @@
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+
 export async function fetchCategories() {
-  const res = await fetch('/api/categories', {
+  const res = await fetch(`${API_URL}/categories`, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' }
   });

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { fetchCategories } from '../services/categories';
 import { fetchBrands } from '../services/brands';
+import { api } from '../services/api';
 
 export default function ProductFilters({ onSearch, onFilter }) {
   const { t } = useTranslation();
@@ -45,7 +46,7 @@ export default function ProductFilters({ onSearch, onFilter }) {
 
   const loadCategories = async () => {
     try {
-      const data = await fetchCategories();
+      const data = await api.get('/categories');
       setCategories(data);
     } catch (error) {
       console.error('Error fetching categories:', error);
