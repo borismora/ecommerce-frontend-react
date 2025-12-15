@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { register } from '../../services/authService';
 import { useAuth } from '../../context/auth/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { api } from '../../services/api';
 
 export default function RegisterForm() {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
@@ -21,7 +21,7 @@ export default function RegisterForm() {
     }
 
     try {
-      const response = await register(form);
+      const response = await api.post('/auth/register', form);
       localStorage.setItem('token', response.token);
       performLogin(response.user);
 

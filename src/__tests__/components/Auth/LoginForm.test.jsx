@@ -1,12 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import LoginForm from '../../../components/Auth/LoginForm';
-import { login } from '../../../services/authService';
+import { api } from '../../../services/api';
 import { faker } from '@faker-js/faker';
 
 // Mock dependencies
-vi.mock('../../../services/authService', () => ({
-  login: vi.fn(),
+vi.mock('../../../services/api', () => ({
+  api: {
+    post: vi.fn(),
+  },
 }));
 vi.mock('../../../context/auth/useAuth', () => ({
   useAuth: () => ({
@@ -21,7 +23,6 @@ vi.mock('react-i18next', () => ({
     t: (key) => key,
   }),
 }));
-
 
 describe('LoginForm', () => {
   const fakeUser = {
@@ -48,21 +49,24 @@ describe('LoginForm', () => {
     expect(await screen.findByText('login.emptyFields')).toBeInTheDocument();
   });
 
-  it('calls login and performLogin on successful submit', async () => {
-    login.mockResolvedValueOnce({ user: { id: 1 }, token: fakeToken });
+  it('calls api.post on successful submit', async () => {
+    api.post.mockResolvedValueOnce({ user: { id: 1 }, token: fakeToken });
     render(<LoginForm />);
     fireEvent.change(screen.getByPlaceholderText('login.email'), { target: { value: fakeUser.email } });
     fireEvent.change(screen.getByPlaceholderText('login.password'), { target: { value: fakeUser.password } });
     fireEvent.click(screen.getByRole('button', { name: 'login.submit' }));
 
     await waitFor(() => {
-      expect(login).toHaveBeenCalledWith({ email: fakeUser.email, password: fakeUser.password });
+      expect(api.post).toHaveBeenCalledWith('/auth/login', {
+        email: fakeUser.email,
+        password: fakeUser.password,
+      });
       expect(localStorage.getItem('token')).toBe(fakeToken);
     });
   });
 
   it('shows error message on login failure', async () => {
-    login.mockRejectedValueOnce(new Error('fail'));
+    api.post.mockRejectedValueOnce(new Error('fail'));
     render(<LoginForm />);
     fireEvent.change(screen.getByPlaceholderText('login.email'), { target: { value: fakeUser.email } });
     fireEvent.change(screen.getByPlaceholderText('login.password'), { target: { value: fakeUser.password } });
@@ -72,7 +76,7 @@ describe('LoginForm', () => {
   });
 
   it('clears form after successful login', async () => {
-    login.mockResolvedValueOnce({ user: { id: 1 }, token: fakeToken });
+    api.post.mockResolvedValueOnce({ user: { id: 1 }, token: fakeToken });
     render(<LoginForm />);
     const emailInput = screen.getByPlaceholderText('login.email');
     const passwordInput = screen.getByPlaceholderText('login.password');
@@ -87,7 +91,7 @@ describe('LoginForm', () => {
   });
 
   it('shows success style when success is true', async () => {
-    login.mockResolvedValueOnce({ user: { id: 1 }, token: fakeToken });
+    api.post.mockResolvedValueOnce({ user: { id: 1 }, token: fakeToken });
     render(<LoginForm />);
     fireEvent.change(screen.getByPlaceholderText('login.email'), { target: { value: fakeUser.email } });
     fireEvent.change(screen.getByPlaceholderText('login.password'), { target: { value: fakeUser.password } });

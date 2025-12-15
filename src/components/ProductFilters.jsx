@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { fetchCategories } from '../services/categories';
-import { fetchBrands } from '../services/brands';
 import { api } from '../services/api';
 
 export default function ProductFilters({ onSearch, onFilter }) {
@@ -55,7 +53,7 @@ export default function ProductFilters({ onSearch, onFilter }) {
 
   const loadBrands = async () => {
     try {
-      const data = await fetchBrands(filters.category);
+      const data = await api.get(`/brands?category=${filters.category}`);
       setBrands(data);
     } catch (error) {
       console.error('Error fetching brands:', error);

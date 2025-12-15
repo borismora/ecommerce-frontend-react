@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useCart } from '../context/cart/useCart';
 import { useCheckoutForm } from '../hooks/useCheckoutForm';
-import { submitOrder } from '../services/orders';
 import { createPreference } from '../services/payments/mercadoPago';
 import { useNavigate } from 'react-router-dom';
 import MercadoPagoModal from '../components/MercadoPagoModal';
 import { useTranslation } from 'react-i18next';
+import { api } from '../services/api';
 
 export default function Checkout() {
   const { cart, clearCart } = useCart();
@@ -33,7 +33,7 @@ export default function Checkout() {
     };
 
     try {
-      await submitOrder(order);
+      await api.post('/orders', order);
       localStorage.setItem('lastOrder', JSON.stringify(order));
 
       if (method === 'cash') {

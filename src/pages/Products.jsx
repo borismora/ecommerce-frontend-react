@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { fetchProducts } from '../services/products';
 import { useCart } from '../context/cart/useCart';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import Pagination from '../components/Pagination';
 import ProductFilters from '../components/ProductFilters';
+import { api } from '../services/api';
 
 export default function Products() {
   const location = useLocation();
@@ -22,11 +22,11 @@ export default function Products() {
 
   const loadProducts = async () => {
     try {
-      const data = await fetchProducts({
+      const data = await api.get('/products', {
         page: pagination.page,
         category: filters.category,
         brand: filters.brand,
-        search: filters.search,
+        search: filters.search
       });
       setProducts(data.products);
       setPagination({ page: data.page, totalPages: data.totalPages });

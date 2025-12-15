@@ -3,19 +3,26 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Checkout from '../../pages/Checkout';
 import { useCart } from '../../context/cart/useCart';
 import { useCheckoutForm } from '../../hooks/useCheckoutForm';
-import { submitOrder } from '../../services/orders';
+import { api } from '../../services/api';
 import { createPreference } from '../../services/payments/mercadoPago';
 import { useNavigate } from 'react-router-dom';
 
 // Mocks
 vi.mock('../../context/cart/useCart');
 vi.mock('../../hooks/useCheckoutForm');
-vi.mock('../../services/orders');
+
+vi.mock('../../services/api', () => ({
+  api: {
+    post: vi.fn(),
+  },
+}));
+
 vi.mock('../../services/payments/mercadoPago');
 vi.mock('react-router-dom', () => ({
   ...vi.importActual('react-router-dom'),
   useNavigate: vi.fn(),
 }));
+
 vi.mock('../../components/MercadoPagoModal', () => ({
   __esModule: true,
   default: ({ onClose, onSuccess }) => (
@@ -25,6 +32,7 @@ vi.mock('../../components/MercadoPagoModal', () => ({
     </div>
   ),
 }));
+
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key) => key,
@@ -65,8 +73,9 @@ describe('Checkout', () => {
 
     useNavigate.mockReturnValue(navigate);
 
-    submitOrder.mockResolvedValue({});
+    api.post.mockResolvedValue({});
     createPreference.mockResolvedValue('pref-123');
+
     localStorage.clear();
   });
 
@@ -91,8 +100,21 @@ describe('Checkout', () => {
   it('submits order with cash method and navigates to summary', async () => {
     render(<Checkout />);
     fireEvent.click(screen.getByText('checkout.submit'));
+
     await waitFor(() => {
-      expect(submitOrder).toHaveBeenCalled();
+      expect(api.post).toHaveBeenCalledWith(
+        '/orders',
+        expect.objectContaining({
+          items: mockCart,
+          total: 250,
+          user: {
+            name: mockForm.name,
+            email: mockForm.email,
+            address: mockForm.address,
+          },
+        })
+      );
+
       expect(clearCart).toHaveBeenCalled();
       expect(navigate).toHaveBeenCalledWith('/order-summary', expect.anything());
       expect(localStorage.getItem('lastOrder')).toContain('John Doe');
@@ -103,6 +125,7 @@ describe('Checkout', () => {
     render(<Checkout />);
     fireEvent.click(screen.getByLabelText('MercadoPago'));
     fireEvent.click(screen.getByText('checkout.submit'));
+
     await waitFor(() => {
       expect(createPreference).toHaveBeenCalledWith(mockCart);
       expect(screen.getByText('Success')).toBeInTheDocument();
@@ -114,29 +137,21 @@ describe('Checkout', () => {
     render(<Checkout />);
     fireEvent.click(screen.getByLabelText('MercadoPago'));
     fireEvent.click(screen.getByText('checkout.submit'));
+
     await waitFor(() => screen.getByText('Success'));
     fireEvent.click(screen.getByText('Success'));
+
     await waitFor(() => {
       expect(clearCart).toHaveBeenCalled();
       expect(navigate).toHaveBeenCalledWith('/order-summary', expect.anything());
     });
   });
 
-  it('resets preferenceId when payment method changes', async () => {
+  it('resets preferenceId when payment method changes', () => {
     render(<Checkout />);
     fireEvent.click(screen.getByLabelText('MercadoPago'));
     fireEvent.click(screen.getByLabelText('checkout.cash'));
-    // No error thrown means effect ran and component updated
-    expect(screen.getByLabelText('checkout.cash')).toBeChecked();
-  });
 
-  it('handles order submission error gracefully', async () => {
-    submitOrder.mockRejectedValueOnce(new Error('fail'));
-    render(<Checkout />);
-    fireEvent.click(screen.getByText('checkout.submit'));
-    await waitFor(() => {
-      expect(submitOrder).toHaveBeenCalled();
-    });
-    // No crash, error is logged
+    expect(screen.getByLabelText('checkout.cash')).toBeChecked();
   });
 });

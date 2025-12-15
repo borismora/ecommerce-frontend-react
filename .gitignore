@@ -31,3 +31,6 @@ coverage
 .cache
 .cache-loader-*
 .env
+
+# Local Netlify folder
+.netlify

@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { login } from '../../services/authService';
 import { useAuth } from '../../context/auth/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { api } from '../../services/api';
 
 export default function LoginForm() {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -21,7 +21,7 @@ export default function LoginForm() {
     }
 
     try {
-      const response = await login(form);
+      const response = await api.post('/auth/login', form);
       performLogin(response.user);
       localStorage.setItem('token', response.token);
       setSuccess(true);
